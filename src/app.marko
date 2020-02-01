@@ -1,0 +1,204 @@
+class {
+    onCreate(input) {
+        this.state = {
+            loading: true,
+            seasons: []
+        };
+
+        this.loadEpisodes();
+    }
+
+    /**
+     * Load episodes from localStorage if exists; otherwise, fetch the data from the API.
+     */
+    async loadEpisodes() {
+        let seasons = null;
+
+        try {
+            seasons = localStorage.getItem('seasons');
+
+            if (seasons !== null) {
+                seasons = JSON.parse(seasons);
+            }
+        } catch (ex) {
+            console.warn(ex);
+        }
+
+        if (seasons === null) {
+            const episodes = await this.fetchEpisodes();
+
+            seasons = this.groupEpisodes(episodes);
+            seasons = this.sortSeasonEpisodes(seasons);
+
+            try {
+                localStorage.setItem('seasons', JSON.stringify(seasons));
+            } catch (ex) {
+                console.warn(ex);
+            }
+        }
+
+        this.state.seasons = seasons;
+        this.state.loading = false;
+    }
+
+    /**
+     * Fetch all episodes data from the external API.
+     *
+     * @return {array}
+     */
+    async fetchEpisodes() {
+        try {
+            const response = await fetch('https://rideron89.builtwithdark.com/episodes?showKey=clone_wars');
+            const { episodes } = await response.json();
+
+            return episodes;
+        } catch (ex) {
+            console.warn(ex);
+        }
+    }
+
+    /**
+     * Group all episodes by season.
+     *
+     * @param {array} episodes Full episode list
+     *
+     * @return {array}
+     */
+    groupEpisodes(episodes) {
+        let seasons = new Array(6);
+
+        episodes.forEach((episode) => {
+            const seasonIndex = parseInt(episode.episodeNumber.substring(0, 1)) - 1;
+
+            if (seasons[seasonIndex] === undefined) {
+                seasons[seasonIndex] = {
+                    episodes: [],
+                };
+            }
+
+            seasons[seasonIndex].episodes.push(episode);
+        });
+
+        return seasons;
+    }
+
+    /**
+     * Sort the episodes in each season, by episode number.
+     *
+     * @param {array} seasons Season list
+     *
+     * @return {array}
+     */
+    sortSeasonEpisodes(seasons) {
+        return seasons.map((season) => {
+            season.episodes = season.episodes.sort((a, b) => {
+                if (a.episodeNumber === b.episodeNumber) {
+                    return 0;
+                }
+
+                if (a.episodeNumber > b.episodeNumber) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            });
+
+            return season;
+        });
+    }
+}
+
+style {
+    /* http://meyerweb.com/eric/tools/css/reset/
+    v2.0 | 20110126
+    License: none (public domain)
+    */
+
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    html, body, div, span, h1, h2, h3, h4, h5, h6, p, a,
+    small, strike, strong, sub, sup, tt, var, footer, header, section {
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        margin: 0;
+        padding: 0;
+        vertical-align: baseline;
+    }
+
+    html, body {
+        color: #2f3c54;
+        font-family: 'Hind', Arial, sans-serif;
+        font-size: 18px;
+        letter-spacing: 0.01em;
+        line-height: 1.35;
+    }
+
+    a, a:link, a:active, a:visited, a:hover, a:focus {
+        color: #9f67dc;
+    }
+
+    .page {
+        position: relative;
+    }
+
+    .page__header {
+        padding: 40px 40px 0;
+    }
+
+    .page__title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1.3;
+    }
+
+    .page__description {
+        color: #7c8088;
+        margin: 20px 0 40px;
+    }
+
+    .page__description__paragraph + .page__description__paragraph {
+        margin-top: 10px;
+    }
+
+    .seasonWrapper {
+        padding: 0 25px 25px;
+    }
+
+    .noDataMessage {
+        color: #7c8088;
+        font-size: 1.1rem;
+        margin-top: 0 auto;
+        left: 0;
+        right: 0;
+        padding: 0 15px;
+        opacity: 0.8;
+        text-align: center;
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+main class="page"
+    loading show=state.loading
+
+    div
+        header class="page__header"
+            h1 class="page__title" -- Clone Wars Episode Guide
+
+            div class="page__description"
+                p class="page__description__paragraph"
+                    span -- Episodes are listed by their air number: the order at which&nbsp;
+                    a alt="Disney+" href="https://www.disneyplus.com/" target="_blank" -- Disney+
+                    span -- &nbsp;lists them.
+                p class="page__description__paragraph" -- The episode number is the chronological order of the events in which the episode takes place.
+
+        div class="seasonWrapper"
+            if(state.seasons.length === 0)
+                div class="noDataMessage" -- Uh oh! No data could be loaded 😞
+            else
+                for|season,index,_| of=state.seasons
+                    season key=index number=(index + 1) episodes=season.episodes

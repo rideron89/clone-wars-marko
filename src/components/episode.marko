@@ -1,0 +1,61 @@
+class {
+    onCreate(input) {
+        this.state = {
+            seen: input.initialSeen
+        };
+    }
+
+    /**
+     * Triggered when the seen checkbox has been clicked.
+     *
+     * Toggles the current seen status of this episode. Also alerts the parent of the change.
+     */
+    handleSeenChange() {
+        this.state.seen = !this.state.seen;
+
+        this.emit('seen-change', this.input.episode);
+    }
+}
+
+style {
+    .episode {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        white-space: nowrap;
+    }
+
+    .episode + .episode {
+        border-top: 1px solid #f2f2f3;
+        margin-top: 8px;
+        padding-top: 8px;
+    }
+
+    .episode__title {
+        flex: auto;
+        margin-bottom: -3px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .episode__airNumber {
+        flex: 0;
+        margin-bottom: -3px;
+    }
+
+    .episode__checkbox {
+        display: flex;
+        justify-content: flex-end;
+        flex: 0 0 32px;
+        margin-left: 20px;
+        width: 32px;
+    }
+}
+
+div class="episode"
+    span class="episode__title" -- ${input.episode.title}
+    span class="episode__airNumber" -- ${input.episode.airNumber}
+    span -- ${input.seen}
+
+    div class="episode__checkbox"
+        checkbox checked=state.seen on-change('handleSeenChange')

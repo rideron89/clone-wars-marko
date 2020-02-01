@@ -1,0 +1,123 @@
+class {
+    onCreate(input) {
+        this.state = {
+            initialSeenEpisodes: this.loadSeenEpisodes()
+        };
+    }
+
+    /**
+     * Load all seen episode numbers from localStorage.
+     *
+     * @return {array}
+     */
+    loadSeenEpisodes() {
+        try {
+            const seenEpisodes = localStorage.getItem('seen_episodes');
+
+            if (seenEpisodes !== null) {
+                return JSON.parse(seenEpisodes);
+            }
+        } catch (ex) {
+            console.warn(ex);
+        }
+
+        return [];
+    }
+
+    /**
+     * Save all seen episode numbers to localStorage.
+     *
+     * @param {array} seenEpisodes Seen episode numbers
+     */
+    saveSeenEpisodes(seenEpisodes) {
+        try {
+            localStorage.setItem('seen_episodes', JSON.stringify(seenEpisodes));
+        } catch (ex) {
+            console.warn(ex);
+        }
+    }
+
+    /**
+     * Triggered when a child episode component signals that its seen status has changed.
+     *
+     * Removes the episode number from the list of seen episodes if it exists, adds it otherwise.
+     *
+     * @param {object} episode Episode data
+     */
+    handleSeenChange(episode) {
+        let seenEpisodes = this.loadSeenEpisodes();
+
+        if (seenEpisodes.includes(episode.episodeNumber)) {
+            const episodeNumberIndex = seenEpisodes.indexOf(episode.episodeNumber);
+
+            seenEpisodes.splice(episodeNumberIndex, 1);
+        } else {
+            seenEpisodes.push(episode.episodeNumber);
+        }
+
+        this.saveSeenEpisodes(seenEpisodes);
+    }
+}
+
+style {
+    .season + .season {
+        margin-top: 30px;
+    }
+
+    .season__heading {
+        align-items: flex-end;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 0 30px;
+        position: relative;
+    }
+
+    .season__heading::after {
+        background: #f2f2f3;
+        border-radius: 10px;
+        content: "";
+        display: block;
+        height: 2px;
+        position: absolute;
+        top: calc(100% - 15px);
+        width: 100%;
+    }
+
+    .season__heading__title {
+        flex: auto;
+        font-size: 1.3rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .season__heading__episodeNumber {
+        flex: 0;
+        font-size: 0.7rem;
+        font-weight: 700;
+        opacity: 0.6;
+        white-space: nowrap;
+    }
+
+    .season__heading__checkbox {
+        flex: 0 0 32px;
+        margin-left: 20px;
+        width: 32px;
+    }
+
+    .season__heading__checkbox {
+        font-size: 0.7rem;
+        font-weight: 700;
+        opacity: 0.6;
+        text-align: right;
+        white-space: nowrap;
+    }
+}
+
+div class="season"
+    div class="season__heading"
+        span class="season__heading__title" -- Season ${input.number}
+        span class="season__heading__episodeNumber" -- Episode No.
+        span class="season__heading__checkbox" -- Seen
+
+    for|episode,index,_| of=input.episodes
+        episode key=episode.airNumber episode=episode initial-seen=state.initialSeenEpisodes.includes(episode.episodeNumber) on-seen-change('handleSeenChange')

@@ -1,0 +1,23 @@
+{
+    "name": "@rideron89/clone-wars-marko",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Clone Wars episode guide. Build with Marko.",
+    "author": "Ron Rider Jr. <rideron89@gmail.com>",
+    "license": "ISC",
+    "main": "webpack.config.js",
+    "scripts": {
+        "build": "webpack",
+        "dev": "webpack --watch"
+    },
+    "dependencies": {
+        "marko": "^4.18.39",
+        "webpack-cli": "^3.3.10"
+    },
+    "devDependencies": {
+        "@marko/webpack": "^2.1.0",
+        "css-loader": "^3.4.2",
+        "mini-css-extract-plugin": "^0.9.0",
+        "webpack": "^4.41.5"
+    }
+}

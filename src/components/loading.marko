@@ -1,0 +1,68 @@
+class {}
+
+style {
+    @keyframes messageGlowing {
+        0% {
+            color: #8cbba9;
+        }
+
+       50% {
+            color: #c4eadc;
+        }
+
+        100% {
+            color: #8cbba9;
+        }
+    }
+
+    .loading__wrapper {
+        align-items: center;
+        background: #ffffff;
+        box-shadow: 0px 0px 40px 50px #ffffff;
+        bottom: 0;
+        display: flex;
+        height: 100vh;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        left: 0;
+        opacity: 1.0;
+        position: fixed;
+        user-select: none;
+        width: 100vw;
+        transition: bottom 0.75s ease, opacity 0.50s ease;
+        z-index: 1;
+    }
+
+    .loading__wrapper.hidden {
+        bottom: 100%;
+        opacity: 0.0;
+    }
+
+    .loading__inner {
+        text-align: center;
+    }
+
+    .loading__message {
+        animation: 2s messageGlowing 0s infinite;
+        color: #b5e0d0;
+        display: block;
+        font-size: 2rem;
+        margin-top: 10px;
+    }
+}
+
+div class=["loading__wrapper", (!input.show && 'hidden')]
+    div class="loading__inner"
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: rgb(255, 255, 255); display: block; shape-rendering: auto;" width="91px" height="91px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+        <circle cx="50" cy="50" r="29.8632" fill="none" stroke="#b5e0d0" stroke-width="12">
+        <animate attributeName="r" repeatCount="indefinite" dur="1.6393442622950818s" values="0;45" keyTimes="0;1" keySplines="0 0.2 0.8 1" calcMode="spline" begin="-0.8196721311475409s"></animate>
+        <animate attributeName="opacity" repeatCount="indefinite" dur="1.6393442622950818s" values="1;0" keyTimes="0;1" keySplines="0.2 0 0.8 1" calcMode="spline" begin="-0.8196721311475409s"></animate>
+        </circle>
+        <circle cx="50" cy="50" r="2.82434" fill="none" stroke="#b5e0d0" stroke-width="12">
+        <animate attributeName="r" repeatCount="indefinite" dur="1.6393442622950818s" values="0;45" keyTimes="0;1" keySplines="0 0.2 0.8 1" calcMode="spline"></animate>
+        <animate attributeName="opacity" repeatCount="indefinite" dur="1.6393442622950818s" values="1;0" keyTimes="0;1" keySplines="0.2 0 0.8 1" calcMode="spline"></animate>
+        </circle></svg>
+
+        span class="loading__message" -- Loading

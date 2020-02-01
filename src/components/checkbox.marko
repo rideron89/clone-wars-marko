@@ -1,0 +1,45 @@
+class {
+    /**
+     * Triggered when the user clicks on the component.
+     *
+     * Alerts the parent that a change event has been simulated.
+     */
+    handleClick() {
+        this.emit('change');
+    }
+}
+
+style {
+    .checkbox {
+        background: #f0f1f3;
+        border: 1px solid #f0f1f3;
+        border-radius: 100%;
+        padding-bottom: calc(100% - 2px);
+        position: relative;
+        user-select: none;
+        width: 32px;
+        transition: all 0.15s ease;
+    }
+
+    .checkbox.checked {
+        background: #bbf5df;
+        border-color: #b5e0d0;
+    }
+
+    .checkbox__svg {
+        left: 0;
+        margin: 0 auto;
+        opacity: 0.0;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .checkbox.checked .checkbox__svg {
+        opacity: 0.3;
+    }
+}
+
+div class=["checkbox", (input.checked && "checked")] on-click("handleClick")
+    <svg class="checkbox__svg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"/></svg>
