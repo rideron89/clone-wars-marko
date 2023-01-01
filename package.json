@@ -12,12 +12,12 @@
     },
     "dependencies": {
         "marko": "^4.18.39",
-        "webpack-cli": "^3.3.10"
+        "webpack-cli": "^5.0.1"
     },
     "devDependencies": {
-        "@marko/webpack": "^2.1.0",
-        "css-loader": "^3.4.2",
-        "mini-css-extract-plugin": "^0.9.0",
-        "webpack": "^4.41.5"
+        "@marko/webpack": "^9.3.1",
+        "css-loader": "^6.7.3",
+        "mini-css-extract-plugin": "^2.7.2",
+        "webpack": "^5.75.0"
     }
 }
